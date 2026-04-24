@@ -46,6 +46,8 @@ jobs:
       - uses: skyramp/testbot@v0.6.14
         env:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          SF_USERNAME: ${{ secrets.SF_USERNAME }}
+          SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
         with:
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
@@ -61,7 +63,9 @@ jobs:
             rm -f /tmp/sfdx_auth.txt
             sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
             ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
-            echo "{\"baseUrl\": \"${ORG_URL}\"}"
+            INTERNAL_UI="${ORG_URL/trailblaze.my.salesforce.com/trailblaze.lightning.force.com}"
+            EXTERNAL_UI="${ORG_URL/trailblaze.my.salesforce.com/trailblaze.my.site.com\/ebikes\/s\/}"
+            echo "{\"services\": {\"ebikes-api\": {\"baseUrl\": \"${ORG_URL}\"}, \"ebikes-internal-ui\": {\"baseUrl\": \"${INTERNAL_UI}\"}, \"ebikes-external-ui\": {\"baseUrl\": \"${EXTERNAL_UI}\"}}}"
 
           targetReadyCheckCommand: |
             sf org display --target-org mydevorg --json | jq -e '.result.connectedStatus == "Connected"' > /dev/null

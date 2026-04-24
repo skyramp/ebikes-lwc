@@ -1,5 +1,5 @@
 services:
-  - serviceName: ebikes-salesforce
+  - serviceName: ebikes-api
     testDirectory: tests
     language: python
     framework: pytest
@@ -10,3 +10,23 @@ services:
       baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com
       authHeader: Authorization
       authType: bearer
+
+  - serviceName: ebikes-internal-ui
+    testDirectory: tests
+    language: typescript
+    framework: playwright
+    runtimeDetails:
+      serverStartCommand: ""
+      runtime: local
+    api:
+      baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.lightning.force.com
+
+  - serviceName: ebikes-external-ui
+    testDirectory: tests
+    language: typescript
+    framework: playwright
+    runtimeDetails:
+      serverStartCommand: ""
+      runtime: local
+    api:
+      baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.my.site.com/ebikes/s/
