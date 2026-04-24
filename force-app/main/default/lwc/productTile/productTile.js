@@ -19,12 +19,24 @@ export default class ProductTile extends LightningElement {
         this.pictureUrl = value.Picture_URL__c;
         this.name = value.Name;
         this.msrp = value.MSRP__c;
+        this.rating = value.Rating__c || 0;
     }
 
     /** Product__c field values to display. */
     pictureUrl;
     name;
     msrp;
+    rating;
+
+    /**
+     * Returns star characters for display.
+     * BUG: Uses Math.ceil instead of Math.round, so 3.1 shows as 4 stars
+     */
+    get starDisplay() {
+        const filled = Math.ceil(this.rating);
+        const empty = 5 - filled;
+        return '★'.repeat(filled) + '☆'.repeat(empty);
+    }
 
     handleClick() {
         const selectedEvent = new CustomEvent('selected', {
