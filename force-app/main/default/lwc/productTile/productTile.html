@@ -8,7 +8,12 @@
                     alt="Product picture"
                 />
                 <div>
-                    <p class="title slds-align_absolute-center">{name}</p>
+                    <p class="title slds-align_absolute-center">
+                        {name}
+                        <template lwc:if={isNew}>
+                            <lightning-badge label="New" class="slds-var-m-left_xx-small slds-theme_success"></lightning-badge>
+                        </template>
+                    </p>
                     <p class="slds-align_absolute-center">
                         MSRP:&nbsp;
                         <lightning-formatted-number

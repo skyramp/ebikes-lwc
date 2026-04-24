@@ -1,6 +1,20 @@
 @RestResource(urlMapping='/orders/*')
 global class OrderRestController {
 
+    // Valid status transitions — BUG: missing Quality Check → Closed transition
+    private static final Map<String, Set<String>> VALID_TRANSITIONS = new Map<String, Set<String>>{
+        'Draft' => new Set<String>{ 'Submitted to Manufacturing', 'Cancelled' },
+        'Submitted to Manufacturing' => new Set<String>{ 'Approved by Manufacturing', 'Cancelled' },
+        'Approved by Manufacturing' => new Set<String>{ 'Quality Check', 'Cancelled' },
+        'Quality Check' => new Set<String>{ 'Cancelled' },
+        'Cancelled' => new Set<String>()
+    };
+
+    private static Boolean isValidTransition(String fromStatus, String toStatus) {
+        if (!VALID_TRANSITIONS.containsKey(fromStatus)) return false;
+        return VALID_TRANSITIONS.get(fromStatus).contains(toStatus);
+    }
+
     @HttpGet
     global static void getOrders() {
         RestRequest req = RestContext.request;
@@ -72,9 +86,20 @@ global class OrderRestController {
         Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(req.requestBody.toString());
 
         try {
-            Order__c ord = [SELECT Id FROM Order__c WHERE Id = :orderId LIMIT 1];
+            Order__c ord = [SELECT Id, Status__c FROM Order__c WHERE Id = :orderId LIMIT 1];
 
-            if (body.containsKey('Status__c')) ord.Status__c = (String) body.get('Status__c');
+            // Validate status transition if status is changing
+            if (body.containsKey('Status__c')) {
+                String newStatus = (String) body.get('Status__c');
+                if (!isValidTransition(ord.Status__c, newStatus)) {
+                    RestContext.response.statusCode = 400;
+                    RestContext.response.responseBody = Blob.valueOf(
+                        '{"error":"Invalid status transition from \'' + ord.Status__c + '\' to \'' + newStatus + '\'"}'
+                    );
+                    return;
+                }
+                ord.Status__c = newStatus;
+            }
             if (body.containsKey('Account__c')) ord.Account__c = (String) body.get('Account__c');
 
             update ord;

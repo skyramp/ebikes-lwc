@@ -26,6 +26,16 @@
                 <label>Approved by Manufacturing</label>
             </value>
             <value>
+                <fullName>Quality Check</fullName>
+                <default>false</default>
+                <label>Quality Check</label>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+                <label>Cancelled</label>
+            </value>
+            <value>
                 <fullName>In Production</fullName>
                 <default>false</default>
                 <label>In Production</label>
