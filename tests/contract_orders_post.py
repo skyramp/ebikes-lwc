@@ -34,13 +34,15 @@ def test_orders_post():
     # Request Body
     orders_POST_request_body = r'''{
         "Account__c": "001g800000C3eLNAAZ",
-        "Status__c": "Draft"
+        "Status__c": "Draft",
+        "Discount_Percent__c": 0
     }'''
 
     # Expected Response Body
     expected_orders_POST_response_body = r'''{
         "Account__c": "001g800000C3eLNAAZ",
         "CreatedDate": "2026-04-23T20:00:00.000Z",
+        "Discount_Percent__c": 0,
         "Id": "a01FAKE000001",
         "Name": "O-00099",
         "Status__c": "Draft"
@@ -63,6 +65,8 @@ def test_orders_post():
     assert skyramp.get_response_value(orders_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(orders_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_POST_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_POST_response, "Discount_Percent__c") == 0
+    assert skyramp.get_response_value(orders_POST_response, "Discount_Percent__c") >= 0
 
     # Cleanup: delete the created order
     order_id = skyramp.get_response_value(orders_POST_response, "Id")
