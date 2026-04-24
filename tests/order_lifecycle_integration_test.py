@@ -91,9 +91,9 @@ def test_integration():
     assert skyramp.get_response_value(orders_GET_1_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_GET_1_response, "Status__c") == "Submitted to Manufacturing"
 
-    # Step 5: Update status to Approved by Manufacturing
+    # Step 5: Update status to Quality Check (new required workflow step)
     orders_PUT_1_request_body = r'''{
-        "Status__c": "Approved by Manufacturing"
+        "Status__c": "Quality Check"
     }'''
 
     orders_PUT_1_response = client.send_request(
@@ -106,10 +106,10 @@ def test_integration():
     )
     assert orders_PUT_1_response.status_code == 200
     assert skyramp.get_response_value(orders_PUT_1_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
-    assert skyramp.get_response_value(orders_PUT_1_response, "Status__c") == "Approved by Manufacturing"
+    assert skyramp.get_response_value(orders_PUT_1_response, "Status__c") == "Quality Check"
     assert skyramp.get_response_value(orders_PUT_1_response, "Account__c") == "001g800000C3eLNAAZ"
 
-    # Step 6: Final verification of Approved status
+    # Step 6: Verify Quality Check status persisted
     orders_GET_2_response = client.send_request(
         url=URL_playful_bear_m8hbtf_dev_ed,
         path="/services/apexrest/orders/{orders}",
@@ -119,7 +119,37 @@ def test_integration():
     )
     assert orders_GET_2_response.status_code == 200
     assert skyramp.get_response_value(orders_GET_2_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
-    assert skyramp.get_response_value(orders_GET_2_response, "Status__c") == "Approved by Manufacturing"
+    assert skyramp.get_response_value(orders_GET_2_response, "Status__c") == "Quality Check"
+
+    # Step 7: Update status to Approved by Manufacturing (after Quality Check)
+    orders_PUT_2_request_body = r'''{
+        "Status__c": "Approved by Manufacturing"
+    }'''
+
+    orders_PUT_2_response = client.send_request(
+        url=URL_playful_bear_m8hbtf_dev_ed,
+        path="/services/apexrest/orders/{orders}",
+        method="PUT",
+        body=orders_PUT_2_request_body,
+        headers=headers,
+        path_params={"orders": orders}
+    )
+    assert orders_PUT_2_response.status_code == 200
+    assert skyramp.get_response_value(orders_PUT_2_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
+    assert skyramp.get_response_value(orders_PUT_2_response, "Status__c") == "Approved by Manufacturing"
+    assert skyramp.get_response_value(orders_PUT_2_response, "Account__c") == "001g800000C3eLNAAZ"
+
+    # Step 8: Final verification of Approved status
+    orders_GET_3_response = client.send_request(
+        url=URL_playful_bear_m8hbtf_dev_ed,
+        path="/services/apexrest/orders/{orders}",
+        method="GET",
+        headers=headers,
+        path_params={"orders": orders}
+    )
+    assert orders_GET_3_response.status_code == 200
+    assert skyramp.get_response_value(orders_GET_3_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
+    assert skyramp.get_response_value(orders_GET_3_response, "Status__c") == "Approved by Manufacturing"
 
     # # Step 7: Delete the order (cleanup)
     # orders_DELETE_response = client.send_request(
