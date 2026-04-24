@@ -10,7 +10,7 @@ global class OrderRestController {
             // GET /orders/{id}
             try {
                 Order__c ord = [
-                    SELECT Id, Name, Status__c, Account__c, CreatedDate
+                    SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                     FROM Order__c
                     WHERE Id = :path
                     LIMIT 1
@@ -22,12 +22,23 @@ global class OrderRestController {
                 RestContext.response.responseBody = Blob.valueOf('{"error":"Order not found"}');
             }
         } else {
-            // GET /orders/
-            List<Order__c> orders = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
-                FROM Order__c
-                LIMIT 100
-            ];
+            // GET /orders/ with optional ?status= filter
+            String statusFilter = req.params.get('status');
+            List<Order__c> orders;
+            if (String.isNotBlank(statusFilter)) {
+                orders = [
+                    SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
+                    FROM Order__c
+                    WHERE Status__c = :statusFilter
+                    LIMIT 100
+                ];
+            } else {
+                orders = [
+                    SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
+                    FROM Order__c
+                    LIMIT 100
+                ];
+            }
             RestContext.response.statusCode = 200;
             RestContext.response.responseBody = Blob.valueOf(JSON.serialize(orders));
         }
@@ -49,7 +60,7 @@ global class OrderRestController {
         insert ord;
 
         Order__c created = [
-            SELECT Id, Name, Status__c, Account__c, CreatedDate
+            SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
             FROM Order__c
             WHERE Id = :ord.Id
             LIMIT 1
@@ -80,7 +91,7 @@ global class OrderRestController {
             update ord;
 
             Order__c updated = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                 FROM Order__c
                 WHERE Id = :orderId
                 LIMIT 1
