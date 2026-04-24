@@ -10,7 +10,7 @@ global class OrderRestController {
             // GET /orders/{id}
             try {
                 Order__c ord = [
-                    SELECT Id, Name, Status__c, Account__c, CreatedDate
+                    SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                     FROM Order__c
                     WHERE Id = :path
                     LIMIT 1
@@ -24,7 +24,7 @@ global class OrderRestController {
         } else {
             // GET /orders/
             List<Order__c> orders = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                 FROM Order__c
                 LIMIT 100
             ];
@@ -49,7 +49,7 @@ global class OrderRestController {
         insert ord;
 
         Order__c created = [
-            SELECT Id, Name, Status__c, Account__c, CreatedDate
+            SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
             FROM Order__c
             WHERE Id = :ord.Id
             LIMIT 1
@@ -80,7 +80,7 @@ global class OrderRestController {
             update ord;
 
             Order__c updated = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                 FROM Order__c
                 WHERE Id = :orderId
                 LIMIT 1
