@@ -1,0 +1,54 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "[{\"Account__c\":\"001g800000C3eLNAAZ\",\"Status__c\":\"Draft\"},{\"Account__c\":\"001g800000C3eLNAAZ\",\"Status__c\":\"Draft\"}]",
+    "ResponseBody": "[{\"Id\":\"a01g800000BULK001\",\"Name\":\"O-00100\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"CreatedDate\":\"2026-04-24T00:00:00.000Z\",\"LastModifiedDate\":\"2026-04-24T00:00:00.000Z\"},{\"Id\":\"a01g800000BULK002\",\"Name\":\"O-00101\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"CreatedDate\":\"2026-04-24T00:00:00.000Z\",\"LastModifiedDate\":\"2026-04-24T00:00:00.000Z\"}]",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/orders/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:05:06.167Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a01g800000BULK001\",\"Name\":\"O-00100\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"CreatedDate\":\"2026-04-24T00:00:00.000Z\",\"LastModifiedDate\":\"2026-04-24T00:00:00.000Z\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/orders/a01g800000BULK001",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:05:06.167Z",
+    "Scheme": "https"
+  }
+]
