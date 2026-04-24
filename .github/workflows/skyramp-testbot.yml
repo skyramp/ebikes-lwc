@@ -63,9 +63,7 @@ jobs:
             rm -f /tmp/sfdx_auth.txt
             sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
             ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
-            INTERNAL_UI="${ORG_URL/trailblaze.my.salesforce.com/trailblaze.lightning.force.com}"
-            EXTERNAL_UI="${ORG_URL/trailblaze.my.salesforce.com/trailblaze.my.site.com\/ebikes\/s\/}"
-            echo "{\"services\": {\"ebikes-api\": {\"baseUrl\": \"${ORG_URL}\"}, \"ebikes-internal-ui\": {\"baseUrl\": \"${INTERNAL_UI}\"}, \"ebikes-external-ui\": {\"baseUrl\": \"${EXTERNAL_UI}\"}}}"
+            echo "{\"baseUrl\": \"${ORG_URL}\"}"
 
           targetReadyCheckCommand: |
             sf org display --target-org mydevorg --json | jq -e '.result.connectedStatus == "Connected"' > /dev/null
