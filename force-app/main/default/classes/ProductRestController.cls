@@ -13,7 +13,7 @@ global class ProductRestController {
                     SELECT Id, Name, Description__c, MSRP__c, Category__c,
                            Material__c, Level__c, Picture_URL__c, Battery__c,
                            Charger__c, Motor__c, Fork__c, Front_Brakes__c,
-                           Rear_Brakes__c, Product_Family__c
+                           Rear_Brakes__c, Product_Family__c, Rating__c
                     FROM Product__c
                     WHERE Id = :path
                     LIMIT 1
@@ -28,7 +28,7 @@ global class ProductRestController {
             // GET /products/
             List<Product__c> products = [
                 SELECT Id, Name, Description__c, MSRP__c, Category__c,
-                       Material__c, Level__c, Picture_URL__c
+                       Material__c, Level__c, Picture_URL__c, Rating__c
                 FROM Product__c
                 LIMIT 100
             ];
@@ -52,11 +52,21 @@ global class ProductRestController {
         if (body.containsKey('Material__c')) product.Material__c = (String) body.get('Material__c');
         if (body.containsKey('Level__c')) product.Level__c = (String) body.get('Level__c');
         if (body.containsKey('Picture_URL__c')) product.Picture_URL__c = (String) body.get('Picture_URL__c');
+        if (body.containsKey('Rating__c')) product.Rating__c = body.get('Rating__c') instanceof Integer
+            ? (Integer) body.get('Rating__c')
+            : (Decimal) body.get('Rating__c');
 
         insert product;
 
+        Product__c created = [
+            SELECT Id, Name, Description__c, MSRP__c, Category__c,
+                   Material__c, Level__c, Picture_URL__c, Rating__c
+            FROM Product__c
+            WHERE Id = :product.Id
+            LIMIT 1
+        ];
         RestContext.response.statusCode = 201;
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(product));
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(created));
     }
 
     @HttpPut
@@ -84,12 +94,15 @@ global class ProductRestController {
             if (body.containsKey('Material__c')) product.Material__c = (String) body.get('Material__c');
             if (body.containsKey('Level__c')) product.Level__c = (String) body.get('Level__c');
             if (body.containsKey('Picture_URL__c')) product.Picture_URL__c = (String) body.get('Picture_URL__c');
+            if (body.containsKey('Rating__c')) product.Rating__c = body.get('Rating__c') instanceof Integer
+                ? (Integer) body.get('Rating__c')
+                : (Decimal) body.get('Rating__c');
 
             update product;
 
             Product__c updated = [
                 SELECT Id, Name, Description__c, MSRP__c, Category__c,
-                       Material__c, Level__c, Picture_URL__c
+                       Material__c, Level__c, Picture_URL__c, Rating__c
                 FROM Product__c
                 WHERE Id = :productId
                 LIMIT 1

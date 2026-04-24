@@ -56,7 +56,7 @@ public with sharing class ProductController {
             'SELECT count() FROM Product__c ' + whereClause
         );
         result.records = Database.query(
-            'SELECT Id, Name, MSRP__c, Description__c, Category__c, Level__c, Picture_URL__c, Material__c FROM Product__c ' +
+            'SELECT Id, Name, MSRP__c, Description__c, Category__c, Level__c, Picture_URL__c, Material__c, Rating__c FROM Product__c ' +
                 whereClause +
                 ' WITH USER_MODE' +
                 ' ORDER BY Name LIMIT :pageSize OFFSET :offset'
