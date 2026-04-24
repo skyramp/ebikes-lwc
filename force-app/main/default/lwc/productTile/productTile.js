@@ -1,5 +1,8 @@
 import { LightningElement, api } from 'lwc';
 
+/** Site-wide reseller discount percentage */
+const RESELLER_DISCOUNT_PCT = 40;
+
 /**
  * A presentation component to display a Product__c sObject. The provided
  * Product__c data must contain all fields used by this component.
@@ -25,6 +28,11 @@ export default class ProductTile extends LightningElement {
     pictureUrl;
     name;
     msrp;
+
+    /** Reseller price after applying site-wide discount */
+    get resellerPrice() {
+        return Math.round(this.msrp * (RESELLER_DISCOUNT_PCT / 100));
+    }
 
     handleClick() {
         const selectedEvent = new CustomEvent('selected', {
