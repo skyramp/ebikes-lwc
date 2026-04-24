@@ -26,6 +26,15 @@ export default class ProductTile extends LightningElement {
     name;
     msrp;
 
+    /** Show "New" badge for products created in the last 30 days */
+    get isNew() {
+        if (!this._product || !this._product.CreatedDate) return false;
+        const created = new Date(this._product.CreatedDate);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        return created > thirtyDaysAgo;
+    }
+
     handleClick() {
         const selectedEvent = new CustomEvent('selected', {
             detail: this.product.Id
