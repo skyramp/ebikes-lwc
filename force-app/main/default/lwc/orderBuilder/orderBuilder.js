@@ -8,6 +8,7 @@ import {
     updateRecord,
     deleteRecord
 } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 /** Use Apex to fetch related records. */
 import { refreshApex, getSObjectValue } from '@salesforce/apex';
@@ -25,8 +26,8 @@ import PRICE_FIELD from '@salesforce/schema/Order_Item__c.Price__c';
 /** Order_Item__c Schema. */
 import PRODUCT_MSRP_FIELD from '@salesforce/schema/Product__c.MSRP__c';
 
-/** Discount for resellers. TODO - move to custom field on Account. */
-const DISCOUNT = 0.6;
+/** Order__c discount field — replaces hardcoded DISCOUNT constant. */
+import DISCOUNT_FIELD from '@salesforce/schema/Order__c.Discount_Percent__c';
 
 /**
  * Gets the quantity of all items in an Order_Item__c SObject.
@@ -84,6 +85,30 @@ export default class OrderBuilder extends LightningElement {
     /** Wired Apex result so it may be programmatically refreshed. */
     wiredOrderItems;
 
+    /** Wire the Order__c record to read Discount_Percent__c dynamically. */
+    @wire(getRecord, { recordId: '$recordId', fields: [DISCOUNT_FIELD] })
+    order;
+
+    /**
+     * Returns the discount multiplier applied to MSRP.
+     * BUG: should be (1 - pct/100) but we use (pct/100) —
+     * e.g. 40% discount returns 0.4 instead of 0.6.
+     */
+    get discountMultiplier() {
+        const pct = this.order?.data
+            ? getFieldValue(this.order.data, DISCOUNT_FIELD)
+            : 0;
+        return pct / 100;
+    }
+
+    /** Returns the current discount percentage for display. */
+    get discountDisplay() {
+        const pct = this.order?.data
+            ? getFieldValue(this.order.data, DISCOUNT_FIELD)
+            : 0;
+        return pct;
+    }
+
     /** Apex load the Order__c's Order_Item_c[] and their related Product__c details. */
     @wire(getOrderItems, { orderId: '$recordId' })
     wiredGetOrderItems(value) {
@@ -114,7 +139,7 @@ export default class OrderBuilder extends LightningElement {
         fields[ORDER_FIELD.fieldApiName] = this.recordId;
         fields[PRODUCT_FIELD.fieldApiName] = product.Id;
         fields[PRICE_FIELD.fieldApiName] = Math.round(
-            getSObjectValue(product, PRODUCT_MSRP_FIELD) * DISCOUNT
+            getSObjectValue(product, PRODUCT_MSRP_FIELD) * this.discountMultiplier
         );
 
         // create Order_Item__c record on server

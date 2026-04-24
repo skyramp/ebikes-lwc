@@ -3,6 +3,7 @@
         <template lwc:if={orderItems}>
             <header class="slds-text-heading_small">
                 <div>
+                    <span class="slds-var-m-right_small">Discount: {discountDisplay}%</span>
                     Order Total:
                     <lightning-formatted-number
                         value={orderPrice}
