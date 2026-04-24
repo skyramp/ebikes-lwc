@@ -31,7 +31,6 @@ jobs:
       checks: write
 
     steps:
-      # Generate a GitHub App installation token to retrigger CI workflows on push
       - name: Generate GitHub App Token
         id: app-token
         uses: actions/create-github-app-token@v1
@@ -55,16 +54,17 @@ jobs:
 
           # Install Salesforce CLI, authenticate to org, and deploy source
           targetSetupCommand: |
+            set -euo pipefail
             npm install -g @salesforce/cli
             echo "${SFDX_AUTH_URL}" > /tmp/sfdx_auth.txt
             sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth.txt --alias mydevorg --set-default
-            rm /tmp/sfdx_auth.txt
+            rm -f /tmp/sfdx_auth.txt
             sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
             ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
             echo "{\"baseUrl\": \"${ORG_URL}\"}"
 
           targetReadyCheckCommand: |
-            sf org display --target-org mydevorg --json | jq -e '.result.instanceUrl' > /dev/null
+            sf org display --target-org mydevorg --json | jq -e '.result.connectedStatus == "Connected"' > /dev/null
 
           targetReadyCheckTimeout: '120'
 
@@ -72,5 +72,4 @@ jobs:
           authTokenCommand: |
             sf org display --target-org mydevorg --json | jq -r '.result.accessToken'
 
-          # No teardown needed — Salesforce org persists
           skipTargetTeardown: 'true'
