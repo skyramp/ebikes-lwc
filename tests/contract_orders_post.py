@@ -63,6 +63,10 @@ def test_orders_post():
     assert skyramp.get_response_value(orders_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(orders_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_POST_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_POST_response, "Order_Total") is not None
+    assert skyramp.get_response_value(orders_POST_response, "Order_Total") >= 0
+    assert skyramp.get_response_value(orders_POST_response, "Item_Count") is not None
+    assert skyramp.get_response_value(orders_POST_response, "Item_Count") >= 0
 
     # Cleanup: delete the created order
     order_id = skyramp.get_response_value(orders_POST_response, "Id")

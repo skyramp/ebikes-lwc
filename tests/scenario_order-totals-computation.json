@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Account__c\":\"001g800000C3eLNAAZ\",\"Status__c\":\"Draft\"}",
+    "ResponseBody": "{\"Id\":\"a01FAKE000001\",\"Name\":\"O-00001\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"Order_Total\":0,\"Item_Count\":0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/orders/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:48.002Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Order__c\":\"a01FAKE000001\",\"Product__c\":\"a03g800000ADlWkAAL\",\"Price__c\":2999,\"Qty_S__c\":2,\"Qty_M__c\":1,\"Qty_L__c\":0}",
+    "ResponseBody": "{\"Id\":\"a00FAKE000001\",\"Order__c\":\"a01FAKE000001\",\"Product__c\":\"a03g800000ADlWkAAL\",\"Price__c\":2999,\"Qty_S__c\":2,\"Qty_M__c\":1,\"Qty_L__c\":0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/order-items/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:48.002Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a01FAKE000001\",\"Name\":\"O-00001\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"Order_Total\":8997,\"Item_Count\":1}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/orders/a01FAKE000001",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:48.002Z",
+    "Scheme": "https"
+  }
+]

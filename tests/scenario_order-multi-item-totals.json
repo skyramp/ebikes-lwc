@@ -1,0 +1,106 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Account__c\":\"001g800000C3eLNAAZ\",\"Status__c\":\"Draft\"}",
+    "ResponseBody": "{\"Id\":\"a01FAKE000002\",\"Name\":\"O-00002\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"Order_Total\":0,\"Item_Count\":0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/orders/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:53.478Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Order__c\":\"a01FAKE000002\",\"Product__c\":\"a03g800000ADlWkAAL\",\"Price__c\":1999,\"Qty_S__c\":1,\"Qty_M__c\":0,\"Qty_L__c\":0}",
+    "ResponseBody": "{\"Id\":\"a00FAKE000002\",\"Order__c\":\"a01FAKE000002\",\"Product__c\":\"a03g800000ADlWkAAL\",\"Price__c\":1999,\"Qty_S__c\":1,\"Qty_M__c\":0,\"Qty_L__c\":0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/order-items/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:53.479Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Order__c\":\"a01FAKE000002\",\"Product__c\":\"a03g800000ADlWkBBL\",\"Price__c\":2999,\"Qty_S__c\":2,\"Qty_M__c\":0,\"Qty_L__c\":0}",
+    "ResponseBody": "{\"Id\":\"a00FAKE000003\",\"Order__c\":\"a01FAKE000002\",\"Product__c\":\"a03g800000ADlWkBBL\",\"Price__c\":2999,\"Qty_S__c\":2,\"Qty_M__c\":0,\"Qty_L__c\":0}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/order-items/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:53.479Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a01FAKE000002\",\"Name\":\"O-00002\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"Order_Total\":7997,\"Item_Count\":2}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/orders/a01FAKE000002",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-24T19:00:53.479Z",
+    "Scheme": "https"
+  }
+]
