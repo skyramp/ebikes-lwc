@@ -11,7 +11,10 @@
                         class="order-total"
                     ></lightning-formatted-number>
                 </div>
-                <div class="right">Total Items: {orderQuantity}</div>
+                <div class="right">
+                    <span class="slds-var-m-right_small">Discount: {discountDisplay}%</span>
+                    Total Items: {orderQuantity}
+                </div>
             </header>
             <div
                 class="drop-zone slds-var-p-around_x-small"

@@ -10,7 +10,7 @@ global class OrderRestController {
             // GET /orders/{id}
             try {
                 Order__c ord = [
-                    SELECT Id, Name, Status__c, Account__c, CreatedDate
+                    SELECT Id, Name, Status__c, Account__c, Discount_Percent__c, CreatedDate
                     FROM Order__c
                     WHERE Id = :path
                     LIMIT 1
@@ -24,7 +24,7 @@ global class OrderRestController {
         } else {
             // GET /orders/
             List<Order__c> orders = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, Discount_Percent__c, CreatedDate
                 FROM Order__c
                 LIMIT 100
             ];
@@ -45,11 +45,14 @@ global class OrderRestController {
         } else {
             ord.Status__c = 'Draft';
         }
+        if (body.containsKey('Discount_Percent__c')) {
+            ord.Discount_Percent__c = (Decimal) body.get('Discount_Percent__c');
+        }
 
         insert ord;
 
         Order__c created = [
-            SELECT Id, Name, Status__c, Account__c, CreatedDate
+            SELECT Id, Name, Status__c, Account__c, Discount_Percent__c, CreatedDate
             FROM Order__c
             WHERE Id = :ord.Id
             LIMIT 1
@@ -76,11 +79,14 @@ global class OrderRestController {
 
             if (body.containsKey('Status__c')) ord.Status__c = (String) body.get('Status__c');
             if (body.containsKey('Account__c')) ord.Account__c = (String) body.get('Account__c');
+            if (body.containsKey('Discount_Percent__c')) {
+                ord.Discount_Percent__c = (Decimal) body.get('Discount_Percent__c');
+            }
 
             update ord;
 
             Order__c updated = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, Discount_Percent__c, CreatedDate
                 FROM Order__c
                 WHERE Id = :orderId
                 LIMIT 1
