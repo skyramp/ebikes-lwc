@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Account__c\":\"001g800000C3eLNAAZ\",\"Status__c\":\"Draft\"}",
+    "ResponseBody": "{\"Id\":\"a01g800000C9cIVAAZ\",\"Name\":\"O-00001\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"CreatedDate\":\"2026-04-24T03:45:20.000+0000\",\"LastModifiedDate\":\"2026-04-24T03:45:20.000+0000\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/orders/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T03:50:48.327Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a01g800000C9cIVAAZ\",\"Name\":\"O-00001\",\"Status__c\":\"Draft\",\"Account__c\":\"001g800000C3eLNAAZ\",\"CreatedDate\":\"2026-04-24T03:45:20.000+0000\",\"LastModifiedDate\":\"2026-04-24T03:45:20.000+0000\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/orders/a01g800000C9cIVAAZ",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-24T03:50:48.327Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/services/apexrest/orders/a01g800000C9cIVAAZ",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 443,
+    "Timestamp": "2026-04-24T03:50:48.327Z",
+    "Scheme": "https"
+  }
+]

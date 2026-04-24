@@ -44,6 +44,7 @@ def test_integration():
     assert skyramp.get_response_value(endpoint_2_POST_response, "Id") is not None
     assert skyramp.get_response_value(endpoint_2_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(endpoint_2_POST_response, "Status__c") == "Draft"
+    assert skyramp.get_response_value(endpoint_2_POST_response, "LastModifiedDate") is not None
 
     order_id = skyramp.get_response_value(endpoint_2_POST_response, "Id")
 
