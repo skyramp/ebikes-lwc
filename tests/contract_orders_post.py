@@ -42,6 +42,7 @@ def test_orders_post():
         "Account__c": "001g800000C3eLNAAZ",
         "CreatedDate": "2026-04-23T20:00:00.000Z",
         "Id": "a01FAKE000001",
+        "LastModifiedDate": "2026-04-23T20:00:00.000Z",
         "Name": "O-00099",
         "Status__c": "Draft"
     }'''
@@ -63,6 +64,7 @@ def test_orders_post():
     assert skyramp.get_response_value(orders_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(orders_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_POST_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_POST_response, "LastModifiedDate") is not None
 
     # Cleanup: delete the created order
     order_id = skyramp.get_response_value(orders_POST_response, "Id")
