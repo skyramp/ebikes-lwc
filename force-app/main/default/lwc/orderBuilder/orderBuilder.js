@@ -25,8 +25,9 @@ import PRICE_FIELD from '@salesforce/schema/Order_Item__c.Price__c';
 /** Order_Item__c Schema. */
 import PRODUCT_MSRP_FIELD from '@salesforce/schema/Product__c.MSRP__c';
 
-/** Discount for resellers. TODO - move to custom field on Account. */
-const DISCOUNT = 0.6;
+/** Order__c Schema - discount field. */
+import DISCOUNT_FIELD from '@salesforce/schema/Order__c.Discount_Percent__c';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 
 /**
  * Gets the quantity of all items in an Order_Item__c SObject.
@@ -81,6 +82,17 @@ export default class OrderBuilder extends LightningElement {
 
     error;
 
+    /** Wired Order__c record for discount field. */
+    @wire(getRecord, { recordId: '$recordId', fields: [DISCOUNT_FIELD] })
+    order;
+
+    /** Gets the discount multiplier from the Order__c's Discount_Percent__c field. */
+    get discountMultiplier() {
+        const pct = getFieldValue(this.order.data, DISCOUNT_FIELD);
+        // Convert percentage to multiplier (e.g. 40% discount → 0.4 multiplier)
+        return pct != null && pct > 0 ? pct / 100 : 0.6;
+    }
+
     /** Wired Apex result so it may be programmatically refreshed. */
     wiredOrderItems;
 
@@ -114,7 +126,7 @@ export default class OrderBuilder extends LightningElement {
         fields[ORDER_FIELD.fieldApiName] = this.recordId;
         fields[PRODUCT_FIELD.fieldApiName] = product.Id;
         fields[PRICE_FIELD.fieldApiName] = Math.round(
-            getSObjectValue(product, PRODUCT_MSRP_FIELD) * DISCOUNT
+            getSObjectValue(product, PRODUCT_MSRP_FIELD) * this.discountMultiplier
         );
 
         // create Order_Item__c record on server
@@ -210,5 +222,10 @@ export default class OrderBuilder extends LightningElement {
 
     get hasNoOrderItems() {
         return this.orderItems.length === 0;
+    }
+
+    get discountDisplay() {
+        const pct = getFieldValue(this.order?.data, DISCOUNT_FIELD);
+        return pct != null ? pct : 40;
     }
 }
