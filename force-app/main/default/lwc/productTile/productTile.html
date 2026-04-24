@@ -10,11 +10,20 @@
                 <div>
                     <p class="title slds-align_absolute-center">{name}</p>
                     <p class="slds-align_absolute-center">
-                        MSRP:&nbsp;
+                        <span class="slds-text-color_weak"><s>MSRP:&nbsp;
                         <lightning-formatted-number
                             format-style="currency"
                             currency-code="USD"
                             value={msrp}
+                            maximum-fraction-digits="0"
+                        ></lightning-formatted-number></s></span>
+                    </p>
+                    <p class="slds-align_absolute-center">
+                        Reseller:&nbsp;
+                        <lightning-formatted-number
+                            format-style="currency"
+                            currency-code="USD"
+                            value={resellerPrice}
                             class="price"
                             maximum-fraction-digits="0"
                         ></lightning-formatted-number>
