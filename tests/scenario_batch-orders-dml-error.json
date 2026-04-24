@@ -1,0 +1,28 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "[{\"Account__c\":\"INVALID_ACCOUNT_ID_THAT_CAUSES_DML_FAILURE\",\"Status__c\":\"Draft\"}]",
+    "ResponseBody": "{\"error\":\"DML exception occurred during batch insert\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/orders/",
+    "QueryParams": {},
+    "StatusCode": 422,
+    "Port": 443,
+    "Timestamp": "2026-04-24T20:04:37.291Z",
+    "Scheme": "https"
+  }
+]
