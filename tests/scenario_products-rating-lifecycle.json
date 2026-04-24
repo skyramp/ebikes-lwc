@@ -1,0 +1,80 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Name\":\"Test E-Bike Rating-1714000000\",\"MSRP__c\":1299.99,\"Category__c\":\"Mountain\",\"Level__c\":\"Beginner\",\"Rating__c\":3.7}",
+    "ResponseBody": "{\"Id\":\"a0000000000001AAA\",\"Name\":\"Test E-Bike Rating-1714000000\",\"MSRP__c\":1299.99,\"Category__c\":\"Mountain\",\"Level__c\":\"Beginner\",\"Rating__c\":3.7}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/services/apexrest/products/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-24T18:57:41.988Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a0000000000001AAA\",\"Name\":\"Test E-Bike Rating-1714000000\",\"MSRP__c\":1299.99,\"Category__c\":\"Mountain\",\"Level__c\":\"Beginner\",\"Rating__c\":3.7}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/services/apexrest/products/a0000000000001AAA",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-24T18:57:41.989Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/services/apexrest/services/apexrest/products/a0000000000001AAA",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 443,
+    "Timestamp": "2026-04-24T18:57:41.989Z",
+    "Scheme": "https"
+  }
+]
