@@ -43,25 +43,36 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: Setup Salesforce CLI and Authenticate
+        run: |
+          npm install -g @salesforce/cli
+          echo "${SFDX_AUTH_URL}" > /tmp/sfdx_auth.txt
+          sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth.txt --alias mydevorg --set-default
+          rm -f /tmp/sfdx_auth.txt
+          SKYRAMP_TEST_TOKEN=$(sf org display --target-org mydevorg --json | jq -r '.result.accessToken')
+          echo "SKYRAMP_TEST_TOKEN=${SKYRAMP_TEST_TOKEN}" >> $GITHUB_ENV
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+
       - uses: skyramp/testbot@v0.6.14
         env:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
           SF_USERNAME: ${{ secrets.SF_USERNAME }}
           SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+          SKYRAMP_TEST_TOKEN: ${{ env.SKYRAMP_TEST_TOKEN }}
         with:
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
           githubToken: ${{ steps.app-token.outputs.token }}
           testDirectory: tests
 
-          # Install Salesforce CLI, authenticate to org, and deploy source
+          # Deploy source, publish site, and deploy guest profile
+          # (SF CLI already installed and authenticated in prior step)
           targetSetupCommand: |
             set -euo pipefail
-            npm install -g @salesforce/cli
-            echo "${SFDX_AUTH_URL}" > /tmp/sfdx_auth.txt
-            sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth.txt --alias mydevorg --set-default
-            rm -f /tmp/sfdx_auth.txt
             sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
+            sf community publish -n E-Bikes --target-org mydevorg
+            sf project deploy start --metadata-dir=guest-profile-metadata --target-org mydevorg --wait 10
             ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
             echo "{\"baseUrl\": \"${ORG_URL}\"}"
 
@@ -70,7 +81,7 @@ jobs:
 
           targetReadyCheckTimeout: '120'
 
-          # Get a fresh access token for API testing
+          # Backup: get a fresh access token for API testing
           authTokenCommand: |
             sf org display --target-org mydevorg --json | jq -r '.result.accessToken'
 

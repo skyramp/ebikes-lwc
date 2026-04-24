@@ -4,7 +4,7 @@ services:
     language: python
     framework: pytest
     runtimeDetails:
-      serverStartCommand: "sf project deploy start --source-dir force-app --target-org mydevorg --wait 10"
+      serverStartCommand: "sf project deploy start --source-dir force-app --target-org mydevorg --wait 10 && sf community publish -n E-Bikes --target-org mydevorg && sf project deploy start --metadata-dir=guest-profile-metadata --target-org mydevorg --wait 10"
       runtime: local
     api:
       baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com
