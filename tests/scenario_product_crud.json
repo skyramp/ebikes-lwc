@@ -1,0 +1,158 @@
+[
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"Name\":\"Integration Test Bike Z1\",\"MSRP__c\":3499,\"Category__c\":\"Mountain\",\"Material__c\":\"Carbon\",\"Level__c\":\"Racer\",\"Description__c\":\"High-performance test bike\",\"Picture_URL__c\":\"https://example.com/z1.png\"}",
+    "ResponseBody": "{\"Id\":\"a03FAKE000099\",\"Name\":\"Integration Test Bike Z1\",\"MSRP__c\":3499,\"Category__c\":\"Mountain\",\"Material__c\":\"Carbon\",\"Level__c\":\"Racer\",\"Description__c\":\"High-performance test bike\",\"Picture_URL__c\":\"https://example.com/z1.png\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "POST",
+    "Path": "/services/apexrest/products/",
+    "QueryParams": {},
+    "StatusCode": 201,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a03FAKE000099\",\"Name\":\"Integration Test Bike Z1\",\"MSRP__c\":3499,\"Category__c\":\"Mountain\",\"Material__c\":\"Carbon\",\"Level__c\":\"Racer\",\"Description__c\":\"High-performance test bike\",\"Picture_URL__c\":\"https://example.com/z1.png\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/products/a03FAKE000099",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "{\"MSRP__c\":2999,\"Category__c\":\"Commuter\"}",
+    "ResponseBody": "{\"Id\":\"a03FAKE000099\",\"Name\":\"Integration Test Bike Z1\",\"MSRP__c\":2999,\"Category__c\":\"Commuter\",\"Material__c\":\"Carbon\",\"Level__c\":\"Racer\",\"Description__c\":\"High-performance test bike\",\"Picture_URL__c\":\"https://example.com/z1.png\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "PUT",
+    "Path": "/services/apexrest/products/a03FAKE000099",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"Id\":\"a03FAKE000099\",\"Name\":\"Integration Test Bike Z1\",\"MSRP__c\":2999,\"Category__c\":\"Commuter\",\"Material__c\":\"Carbon\",\"Level__c\":\"Racer\",\"Description__c\":\"High-performance test bike\",\"Picture_URL__c\":\"https://example.com/z1.png\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/products/a03FAKE000099",
+    "QueryParams": {},
+    "StatusCode": 200,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "DELETE",
+    "Path": "/services/apexrest/products/a03FAKE000099",
+    "QueryParams": {},
+    "StatusCode": 204,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  },
+  {
+    "Source": "192.168.65.1:39998",
+    "Destination": "playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com",
+    "RequestBody": "",
+    "ResponseBody": "{\"error\":\"Product not found\"}",
+    "RequestHeaders": {
+      "Content-Type": [
+        "application/json"
+      ],
+      "Authorization": [
+        "Bearer SKYRAMP_PLACEHOLDER_TOKEN"
+      ]
+    },
+    "ResponseHeaders": {
+      "Content-Type": [
+        "application/json"
+      ]
+    },
+    "Method": "GET",
+    "Path": "/services/apexrest/products/a03FAKE000099",
+    "QueryParams": {},
+    "StatusCode": 404,
+    "Port": 443,
+    "Timestamp": "2026-04-23T23:39:04.337Z",
+    "Scheme": "https"
+  }
+]

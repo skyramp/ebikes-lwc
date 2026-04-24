@@ -4,70 +4,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      # Common source directories
-      - 'src/**'
-      - 'app/**'
-      - 'lib/**'
-      - 'api/**'
-      - 'server/**'
-      - 'backend/**'
-      - 'frontend/**'
-      - 'web/**'
-      - 'core/**'
-      # Monorepo patterns
-      - 'packages/**'
-      - 'apps/**'
-      - 'services/**'
-      # Go conventions
-      - 'cmd/**'
-      - 'pkg/**'
-      - 'internal/**'
-      # Rust workspaces
-      - 'crates/**'
-      # Serverless
-      - 'functions/**'
-      # Frontend framework conventions
-      - 'pages/**'
-      - 'components/**'
-      # Ruby/Rails
-      - 'db/**'
-      - 'config/**'
-      # Common web patterns
-      - 'routes/**'
-      - 'controllers/**'
-      - 'models/**'
-      - 'views/**'
-      - 'handlers/**'
-      - 'middleware/**'
+      # Salesforce source
+      - 'force-app/**'
       # Tests
       - 'tests/**'
-      - 'test/**'
-      - 'spec/**'
       # Build and dependency files
       - 'package.json'
-      - 'package-lock.json'
-      - 'yarn.lock'
-      - 'pnpm-lock.yaml'
-      - 'pyproject.toml'
-      - 'setup.py'
-      - 'setup.cfg'
-      - 'requirements*.txt'
-      - 'Pipfile'
-      - 'poetry.lock'
-      - 'go.mod'
-      - 'go.sum'
-      - 'Cargo.toml'
-      - 'Cargo.lock'
-      - 'pom.xml'
-      - 'build.gradle'
-      - 'build.gradle.kts'
-      - 'Gemfile'
-      - 'Gemfile.lock'
-      - '*.csproj'
-      - '*.sln'
-      - 'Dockerfile'
-      - 'docker-compose.yml'
-      - 'docker-compose.yaml'
+      - 'sfdx-project.json'
   issue_comment:
     types: [created]
 
@@ -89,7 +32,6 @@ jobs:
 
     steps:
       # Generate a GitHub App installation token to retrigger CI workflows on push
-      # https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow
       - name: Generate GitHub App Token
         id: app-token
         uses: actions/create-github-app-token@v1
@@ -103,7 +45,32 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - uses: skyramp/testbot@v0.6.14
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
         with:
           skyrampLicenseFile: ${{ secrets.SKYRAMP_LICENSE_FILE }}
           anthropicApiKey: ${{ secrets.SKYRAMP_TESTBOT_API_KEY }}
           githubToken: ${{ steps.app-token.outputs.token }}
+          testDirectory: tests
+
+          # Install Salesforce CLI, authenticate to org, and deploy source
+          targetSetupCommand: |
+            npm install -g @salesforce/cli
+            echo "${SFDX_AUTH_URL}" > /tmp/sfdx_auth.txt
+            sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth.txt --alias mydevorg --set-default
+            rm /tmp/sfdx_auth.txt
+            sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
+            ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
+            echo "{\"baseUrl\": \"${ORG_URL}\"}"
+
+          targetReadyCheckCommand: |
+            sf org display --target-org mydevorg --json | jq -e '.result.instanceUrl' > /dev/null
+
+          targetReadyCheckTimeout: '120'
+
+          # Get a fresh access token for API testing
+          authTokenCommand: |
+            sf org display --target-org mydevorg --json | jq -r '.result.accessToken'
+
+          # No teardown needed — Salesforce org persists
+          skipTargetTeardown: 'true'
