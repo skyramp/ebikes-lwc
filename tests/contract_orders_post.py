@@ -42,6 +42,7 @@ def test_orders_post():
         "Account__c": "001g800000C3eLNAAZ",
         "CreatedDate": "2026-04-23T20:00:00.000Z",
         "Id": "a01FAKE000001",
+        "LastModifiedDate": "2026-04-23T20:00:00.000Z",
         "Name": "O-00099",
         "Status__c": "Draft"
     }'''
@@ -63,6 +64,7 @@ def test_orders_post():
     assert skyramp.get_response_value(orders_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(orders_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_POST_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_POST_response, "LastModifiedDate") is not None
 
     # Cleanup: delete the created order
     order_id = skyramp.get_response_value(orders_POST_response, "Id")
@@ -74,5 +76,98 @@ def test_orders_post():
     )
 
 
+def test_orders_get():
+    client = skyramp.Client()
+    headers = {}
+    if os.getenv("SKYRAMP_TEST_TOKEN") is not None:
+        headers["Authorization"] = "Bearer " + os.getenv("SKYRAMP_TEST_TOKEN")
+
+    setup_body = r'''{
+        "Account__c": "001g800000C3eLNAAZ",
+        "Status__c": "Draft"
+    }'''
+    setup_response = client.send_request(
+        url=URL,
+        path="/services/apexrest/orders/",
+        method="POST",
+        body=setup_body,
+        headers=headers
+    )
+    assert setup_response.status_code == 201
+    order_id = skyramp.get_response_value(setup_response, "Id")
+
+    orders_GET_response = client.send_request(
+        url=URL,
+        path=f"/services/apexrest/orders/{order_id}",
+        method="GET",
+        headers=headers
+    )
+
+    assert orders_GET_response.status_code == 200
+    assert skyramp.get_response_value(orders_GET_response, "Id") is not None
+    assert skyramp.get_response_value(orders_GET_response, "Name") is not None
+    assert skyramp.get_response_value(orders_GET_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_GET_response, "Status__c") == "Draft"
+    assert skyramp.get_response_value(orders_GET_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_GET_response, "LastModifiedDate") is not None
+
+    client.send_request(
+        url=URL,
+        path=f"/services/apexrest/orders/{order_id}",
+        method="DELETE",
+        headers=headers
+    )
+
+
+def test_orders_put():
+    client = skyramp.Client()
+    headers = {}
+    if os.getenv("SKYRAMP_TEST_TOKEN") is not None:
+        headers["Authorization"] = "Bearer " + os.getenv("SKYRAMP_TEST_TOKEN")
+
+    setup_body = r'''{
+        "Account__c": "001g800000C3eLNAAZ",
+        "Status__c": "Draft"
+    }'''
+    setup_response = client.send_request(
+        url=URL,
+        path="/services/apexrest/orders/",
+        method="POST",
+        body=setup_body,
+        headers=headers
+    )
+    assert setup_response.status_code == 201
+    order_id = skyramp.get_response_value(setup_response, "Id")
+
+    orders_PUT_request_body = r'''{
+        "Status__c": "Submitted to Manufacturing"
+    }'''
+
+    orders_PUT_response = client.send_request(
+        url=URL,
+        path=f"/services/apexrest/orders/{order_id}",
+        method="PUT",
+        body=orders_PUT_request_body,
+        headers=headers
+    )
+
+    assert orders_PUT_response.status_code == 200
+    assert skyramp.get_response_value(orders_PUT_response, "Id") is not None
+    assert skyramp.get_response_value(orders_PUT_response, "Name") is not None
+    assert skyramp.get_response_value(orders_PUT_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_PUT_response, "Status__c") == "Submitted to Manufacturing"
+    assert skyramp.get_response_value(orders_PUT_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_PUT_response, "LastModifiedDate") is not None
+
+    client.send_request(
+        url=URL,
+        path=f"/services/apexrest/orders/{order_id}",
+        method="DELETE",
+        headers=headers
+    )
+
+
 if __name__ == "__main__":
     test_orders_post()
+    test_orders_get()
+    test_orders_put()
