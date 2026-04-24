@@ -1,5 +1,6 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import IMAGE_URL from '@salesforce/resourceUrl/bike_assets';
+import getOrderCount from '@salesforce/apex/OrderController.getOrderCount';
 
 const VIDEO = 'Video';
 const IMAGE = 'Image';
@@ -18,6 +19,22 @@ export default class Hero extends LightningElement {
     @api overlay;
     @api opacity;
     @api buttonClickProductOrFamilyName;
+
+    /** Show total orders fulfilled as social proof */
+    orderCount = 0;
+
+    @wire(getOrderCount)
+    wiredOrderCount({ data }) {
+        if (data) {
+            this.orderCount = data;
+        }
+    }
+
+    get socialProofText() {
+        return this.orderCount > 0
+            ? `Join ${this.orderCount}+ happy riders`
+            : '';
+    }
 
     get resUrl() {
         if (this.isImg) {
