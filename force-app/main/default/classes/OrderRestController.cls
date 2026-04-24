@@ -1,6 +1,38 @@
 @RestResource(urlMapping='/orders/*')
 global class OrderRestController {
 
+    /**
+     * Builds an order response map with computed totals from line items.
+     * BUG: multiplies Price__c * quantity instead of using Price__c directly
+     * (Price__c already includes quantity in the original client-side logic)
+     */
+    private static Map<String, Object> buildOrderResponse(Order__c ord) {
+        Map<String, Object> result = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(ord));
+
+        // Compute totals from child Order_Item__c records
+        List<Order_Item__c> items = [
+            SELECT Price__c, Qty_S__c, Qty_M__c, Qty_L__c
+            FROM Order_Item__c
+            WHERE Order__c = :ord.Id
+        ];
+
+        Decimal orderTotal = 0;
+        Integer itemCount = 0;
+        for (Order_Item__c item : items) {
+            Integer qty = 0;
+            if (item.Qty_S__c != null) qty += (Integer) item.Qty_S__c;
+            if (item.Qty_M__c != null) qty += (Integer) item.Qty_M__c;
+            if (item.Qty_L__c != null) qty += (Integer) item.Qty_L__c;
+            // BUG: Price__c is already the per-item total, but we multiply by qty again
+            orderTotal += (item.Price__c != null ? item.Price__c : 0) * qty;
+            itemCount += qty;
+        }
+
+        result.put('Order_Total', orderTotal);
+        result.put('Item_Count', itemCount);
+        return result;
+    }
+
     @HttpGet
     global static void getOrders() {
         RestRequest req = RestContext.request;
@@ -16,7 +48,7 @@ global class OrderRestController {
                     LIMIT 1
                 ];
                 RestContext.response.statusCode = 200;
-                RestContext.response.responseBody = Blob.valueOf(JSON.serialize(ord));
+                RestContext.response.responseBody = Blob.valueOf(JSON.serialize(buildOrderResponse(ord)));
             } catch (QueryException e) {
                 RestContext.response.statusCode = 404;
                 RestContext.response.responseBody = Blob.valueOf('{"error":"Order not found"}');
@@ -55,7 +87,7 @@ global class OrderRestController {
             LIMIT 1
         ];
         RestContext.response.statusCode = 201;
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(created));
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(buildOrderResponse(created)));
     }
 
     @HttpPut
@@ -86,7 +118,7 @@ global class OrderRestController {
                 LIMIT 1
             ];
             RestContext.response.statusCode = 200;
-            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(updated));
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(buildOrderResponse(updated)));
         } catch (QueryException e) {
             RestContext.response.statusCode = 404;
             RestContext.response.responseBody = Blob.valueOf('{"error":"Order not found"}');
