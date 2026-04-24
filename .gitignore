@@ -40,6 +40,11 @@ $RECYCLE.BIN/
 .vscode/*
 !.vscode/extensions.json
 
+# Python
+__pycache__/
+*.pyc
+.venv/
+
 # Local environment variables
 .env
 .localdev
