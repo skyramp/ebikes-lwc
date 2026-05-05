@@ -49,6 +49,7 @@ __pycache__/
 .env
 .localdev
 auth.json
+skyramp_session.json
 
 # UTAM
 pageObjects

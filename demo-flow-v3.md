@@ -80,51 +80,74 @@ Similarly, `OrderItemRestController.createOrderItem` only sets fields present in
 
 ## Test scenarios CSV (`tests/test_scenarios.csv`)
 
-This is the full suite that Skyramp selects from. For the compliance region change, Skyramp should select scenarios on Order_Item__c (EB-TC-001 through 004) as directly affected, include EB-TC-005 as potentially affected (parent object), and skip the rest as unrelated.
+18 NL scenarios covering the full app. No scripts or traces referenced in the CSV — the CSV is purely natural language descriptions that the web UI displays. Test scripts live separately in the repo.
 
-```csv
-id,title,type,surface,object,description,steps
-EB-TC-001,Add product to order via drag-and-drop,e2e,lightning-ui,Order_Item__c,"Drag a product from sidebar onto order builder, verify item appears with correct price","1. Navigate to Reseller Orders tab; 2. Open existing order; 3. Drag product from sidebar to order builder drop zone; 4. Verify order item tile appears; 5. Verify price is 60% of MSRP"
-EB-TC-002,Create order item via Apex REST API,contract,api,Order_Item__c,"POST to /services/apexrest/order-items/ with order ID, product, price, and quantities","1. Create parent order via POST /apexrest/orders/; 2. POST /apexrest/order-items/ with Order__c, Product__c, Price__c, Qty_S__c, Qty_M__c, Qty_L__c; 3. Assert 201 response; 4. Assert returned fields match request"
-EB-TC-003,Create order item via sObject API,contract,api,Order_Item__c,"POST to /services/data/v65.0/sobjects/Order_Item__c/ with required fields","1. Create parent order; 2. POST /sobjects/Order_Item__c/ with all fields; 3. Assert 201 and success=true"
-EB-TC-004,Edit order item quantities,e2e,lightning-ui,Order_Item__c,"Change S/M/L quantities on an existing order item and save","1. Navigate to order with existing items; 2. Change Qty_S__c value; 3. Click save (checkmark); 4. Verify updated quantity persists"
-EB-TC-005,Order lifecycle status transitions,integration,api,Order__c,"Create order then transition Draft → Submitted → Approved, verify each","1. POST /apexrest/orders/ with Draft status; 2. PUT to Submitted to Manufacturing; 3. GET and verify; 4. PUT to Approved by Manufacturing; 5. GET and verify"
-EB-TC-006,Create order via Apex REST API,contract,api,Order__c,"POST to /services/apexrest/orders/ with Account and Status","1. POST /apexrest/orders/ with Account__c and Status__c=Draft; 2. Assert 201; 3. Assert returned Id and Status"
-EB-TC-007,Create order via sObject API,contract,api,Order__c,"POST to /services/data/v65.0/sobjects/Order__c/","1. POST /sobjects/Order__c/ with Account__c and Status__c; 2. Assert 201 and success=true"
-EB-TC-008,Browse and filter product catalog,e2e,community-ui,Product__c,"Navigate to Product Explorer on community site, apply filters, verify results","1. Navigate to /ebikes/s/product-explorer; 2. Type search term; 3. Adjust max price slider; 4. Uncheck a category; 5. Verify product tiles update"
-EB-TC-009,Create support case,e2e,community-ui,Case,"Submit a support case on community site","1. Navigate to /ebikes/s/create-case; 2. Fill Product, Priority, Category, Reason, Subject, Description; 3. Click Submit; 4. Verify success toast"
-```
+**Order Item flows (EB-TC-001 to 005):** drag-and-drop, multi-product, edit quantities, delete item, verify totals
+**Order flows (EB-TC-006 to 007):** status path transitions, create new order via UI
+**Product flows (EB-TC-008 to 010):** browse/filter, search, view detail card
+**Case flows (EB-TC-011 to 012):** full case submission, minimal fields
+**API flows (EB-TC-013 to 018):** order item contract, order contract, sObject variants, lifecycle integration, products GET
 
-### Skyramp selection for this change
+### Scripts in the repo (8-9 total)
 
-| Scenario | Selected? | Reason |
-|----------|-----------|--------|
-| EB-TC-001 (drag to order builder) | **Yes** | Creates Order_Item__c — directly affected |
-| EB-TC-002 (order item Apex API) | **Yes** | Creates Order_Item__c — directly affected |
-| EB-TC-003 (order item sObject API) | **Yes** | Creates Order_Item__c — directly affected |
-| EB-TC-004 (edit order item) | **Yes** | Modifies Order_Item__c — check for side effects |
-| EB-TC-005 (order lifecycle) | **Yes** | Parent object Order__c — potential cascade |
-| EB-TC-006 (create order Apex API) | No | Order__c only, no Order_Item__c involvement |
-| EB-TC-007 (create order sObject API) | No | Order__c only, no Order_Item__c involvement |
-| EB-TC-008 (browse products) | No | Product__c, unrelated |
-| EB-TC-009 (create case) | No | Case, unrelated |
-| **GAP** (query/edit items without region) | **Suggested** | Skyramp identifies existing records may lack the field |
+| Script | Type | Language |
+|--------|------|----------|
+| `contract_order_items_post.py` | API contract | Python |
+| `contract_orders_post.py` | API contract | Python |
+| `contract_sobject_order_post.py` | API contract | Python |
+| `order_lifecycle_integration_test.py` | API integration | Python |
+| `contract_products_get.py` | API contract | Python — **needs creation** |
+| `contract_sobject_order_item_post.py` | API contract | Python — **needs creation** |
+| `order_with_items_integration_test.py` | API integration | Python — **needs creation** |
+| `e2e_product_browse.ts` | E2E | TS/Playwright — **needs creation** |
+| `e2e_order_item_drag_drop.ts` | E2E | TS/Playwright — **needs creation** |
+
+### Skyramp selection for the Compliance Region change
+
+Testbot selects ~8 of 18 scenarios. It runs 2-3 existing scripts from the repo AND generates 5-6 new tests from the NL scenarios in the CSV.
+
+**Existing scripts selected and run:**
+
+| Script | Result | Why |
+|--------|--------|-----|
+| `e2e_order_item_drag_drop.ts` | **FAIL** | Creates Order_Item__c via UI — missing Compliance_Region__c |
+| `contract_order_items_post.py` | **FAIL** | Creates Order_Item__c via API — missing required field |
+| `contract_sobject_order_item_post.py` | **FAIL** | Creates Order_Item__c via sObject API — same |
+
+**NL scenarios selected and tests generated:**
+
+| CSV Scenario | Result | Why |
+|---|---|---|
+| EB-TC-002 Add multiple products to same order | **FAIL** | Same createRecord gap as drag-and-drop |
+| EB-TC-003 Edit order item quantities | PASS | Updates existing items, field already populated |
+| EB-TC-004 Delete order item from order | PASS | Deletes, doesn't create |
+| EB-TC-005 Verify order total after item changes | **FAIL** | First step adds an item, which fails |
+| EB-TC-006 Transition order status via path | PASS | Order__c, unaffected |
+
+**Skipped (~10 scenarios):**
+EB-TC-007 to 012 (Product/Case — unrelated objects), EB-TC-014 to 016 (Order__c API — different object)
+
+**Gap scenario — suggested by Skyramp:**
+
+> "Verify existing order items without Compliance Region can be queried and edited"
+
+When you add a required field, the platform enforces it on **new** records. But existing Order_Item__c records in the database don't have a value for Compliance_Region__c — the field is null. The question is: can you still query, display, and update those records? In most cases yes — Salesforce only enforces required on create/edit of that specific field. But it's a legitimate gap because:
+
+- If a validation rule or trigger references the field, existing records may fail on any update
+- If the UI renders the field as required on the edit form, users can't save edits to existing items without first filling in a compliance region they may not know
+- Downstream integrations that read Order_Item__c records now get a null field they may not handle
+
+This is the kind of blast-radius question that a human tester often misses — they test the new flow but forget to check what happens to the data that was already there. Skyramp flags it.
+
+**Demo punchline:** Skyramp selected 8 of 18 scenarios, ran 3 existing test scripts and generated 5 new tests from natural language descriptions. 4 tests failed — all because a single required field broke every path that creates an order item. It also identified a gap nobody thought of: what happens to the existing records.
 
 ---
 
-## Test scripts
+## How testbot uses scripts vs. CSV
 
-| CSV ID | Script | Exists? | Notes |
-|--------|--------|---------|-------|
-| EB-TC-001 | `tests/e2e_order_item_drag_drop.py` | **No** | Playwright — needs creation |
-| EB-TC-002 | `tests/contract_order_items_post.py` | **Yes** | Existing, covers this |
-| EB-TC-003 | `tests/contract_sobject_order_item_post.py` | **No** | Needs creation (sObject variant) |
-| EB-TC-004 | `tests/e2e_order_item_edit.py` | **No** | Playwright — needs creation |
-| EB-TC-005 | `tests/order_lifecycle_integration_test.py` | **Yes** | Existing, covers this |
-| EB-TC-006 | `tests/contract_orders_post.py` | **Yes** | Existing |
-| EB-TC-007 | `tests/contract_sobject_order_post.py` | **Yes** | Existing |
-| EB-TC-008 | `tests/e2e_product_browse.py` | **No** | Playwright — needs creation |
-| EB-TC-009 | `tests/e2e_create_case.py` | **No** | Playwright — needs creation |
+**Existing scripts in the repo** — testbot identifies which are relevant to the change, selects them, and runs them directly. These are the "regression suite" — tests that were already passing and should keep passing.
+
+**NL scenarios in the CSV** — testbot reads the natural language descriptions, selects the relevant ones, and generates new tests at runtime. These are additive scenarios that don't have pre-written scripts. This showcases Skyramp's ability to go beyond what's already automated.
 
 ---
 
