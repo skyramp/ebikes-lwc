@@ -157,9 +157,8 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Reseller Order</label>
     <nameField>
-        <displayFormat>O-{00000}</displayFormat>
         <label>Order Number</label>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Reseller Orders</pluralLabel>
     <searchLayouts />

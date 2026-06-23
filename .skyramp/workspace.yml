@@ -7,7 +7,7 @@ services:
       serverStartCommand: "sf project deploy start --source-dir force-app --target-org mydevorg --wait 10 && sf community publish -n E-Bikes --target-org mydevorg && sf project deploy start --metadata-dir=guest-profile-metadata --target-org mydevorg --wait 10"
       runtime: local
     api:
-      baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.my.salesforce.com
+      baseUrl: https://wise-wolf-jrgoc8-dev-ed.trailblaze.my.salesforce.com
       authHeader: Authorization
       authType: bearer
 
@@ -19,7 +19,7 @@ services:
       serverStartCommand: ""
       runtime: local
     api:
-      baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.lightning.force.com
+      baseUrl: https://wise-wolf-jrgoc8-dev-ed.trailblaze.lightning.force.com
 
   - serviceName: ebikes-external-ui
     testDirectory: tests
@@ -29,4 +29,4 @@ services:
       serverStartCommand: ""
       runtime: local
     api:
-      baseUrl: https://playful-bear-m8hbtf-dev-ed.trailblaze.my.site.com/ebikes/s/
+      baseUrl: https://wise-wolf-jrgoc8-dev-ed.trailblaze.my.site.com/ebikes/s/

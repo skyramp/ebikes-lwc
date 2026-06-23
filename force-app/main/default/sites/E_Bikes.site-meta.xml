@@ -25,10 +25,10 @@
     <referrerPolicyOriginWhenCrossOrigin
     >true</referrerPolicyOriginWhenCrossOrigin>
     <selfRegPage>CommunitiesSelfReg</selfRegPage>
-    <siteAdmin>kolja@playful-bear-m8hbtf.com</siteAdmin>
+    <siteAdmin>kolja@wise-wolf-jrgoc8.com</siteAdmin>
     <siteGuestRecordDefaultOwner
-    >kolja@playful-bear-m8hbtf.com</siteGuestRecordDefaultOwner>
+    >kolja@wise-wolf-jrgoc8.com</siteGuestRecordDefaultOwner>
     <siteType>ChatterNetwork</siteType>
-    <subdomain>playful-bear-m8hbtf</subdomain>
+    <subdomain>wise-wolf-jrgoc8</subdomain>
     <urlPathPrefix>ebikes</urlPathPrefix>
 </CustomSite>
