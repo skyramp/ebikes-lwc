@@ -25,10 +25,10 @@
     <referrerPolicyOriginWhenCrossOrigin
     >true</referrerPolicyOriginWhenCrossOrigin>
     <selfRegPage>CommunitiesSelfReg</selfRegPage>
-    <siteAdmin>kolja@wise-wolf-jrgoc8.com</siteAdmin>
+    <siteAdmin>kolja@cunning-otter-gmpo8a.com</siteAdmin>
     <siteGuestRecordDefaultOwner
-    >kolja@wise-wolf-jrgoc8.com</siteGuestRecordDefaultOwner>
+    >kolja@cunning-otter-gmpo8a.com</siteGuestRecordDefaultOwner>
     <siteType>ChatterNetwork</siteType>
-    <subdomain>wise-wolf-jrgoc8</subdomain>
+    <subdomain>cunning-otter-gmpo8a</subdomain>
     <urlPathPrefix>ebikes</urlPathPrefix>
 </CustomSite>
