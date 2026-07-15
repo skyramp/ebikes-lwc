@@ -43,12 +43,15 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
-      - name: Setup Salesforce CLI and Authenticate
+      - name: Setup Salesforce CLI, Authenticate, and Deploy
         run: |
           npm install -g @salesforce/cli
           echo "${SFDX_AUTH_URL}" > /tmp/sfdx_auth.txt
           sf org login sfdx-url --sfdx-url-file /tmp/sfdx_auth.txt --alias mydevorg --set-default
           rm -f /tmp/sfdx_auth.txt
+          sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
+          sf community publish -n E-Bikes --target-org mydevorg
+          sf project deploy start --metadata-dir=guest-profile-metadata --target-org mydevorg --wait 10
           SKYRAMP_TEST_TOKEN=$(sf org display --target-org mydevorg --json | jq -r '.result.accessToken')
           echo "SKYRAMP_TEST_TOKEN=${SKYRAMP_TEST_TOKEN}" >> $GITHUB_ENV
         env:
@@ -66,13 +69,9 @@ jobs:
           githubToken: ${{ steps.app-token.outputs.token }}
           testDirectory: tests
 
-          # Deploy source, publish site, and deploy guest profile
-          # (SF CLI already installed and authenticated in prior step)
+          # Deploy already completed in prior step; just return the org URL
           targetSetupCommand: |
             set -euo pipefail
-            sf project deploy start --source-dir force-app --target-org mydevorg --wait 10
-            sf community publish -n E-Bikes --target-org mydevorg
-            sf project deploy start --metadata-dir=guest-profile-metadata --target-org mydevorg --wait 10
             ORG_URL=$(sf org display --target-org mydevorg --json | jq -r '.result.instanceUrl')
             echo "{\"baseUrl\": \"${ORG_URL}\"}"
 
