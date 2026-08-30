@@ -11,5 +11,8 @@
         record-name={buttonClickProductOrFamilyName}
     >
         <span slot="button">{buttonText}</span>
+        <p lwc:if={socialProofText} slot="social-proof" class="social-proof">
+            {socialProofText}
+        </p>
     </c-hero-details>
 </template>

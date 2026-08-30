@@ -44,6 +44,7 @@ def test_integration():
     assert skyramp.get_response_value(endpoint_1_POST_response, "Name") is not None
     assert skyramp.get_response_value(endpoint_1_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(endpoint_1_POST_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(endpoint_1_POST_response, "LastModifiedDate") is not None
 
     # Chain the order ID for all subsequent requests
     orders = skyramp.get_response_value(endpoint_1_POST_response, "Id")
@@ -60,6 +61,7 @@ def test_integration():
     assert skyramp.get_response_value(orders_GET_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_GET_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_GET_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_GET_response, "LastModifiedDate") is not None
 
     # Step 3: Update status to Submitted to Manufacturing
     orders_PUT_request_body = r'''{
@@ -78,6 +80,7 @@ def test_integration():
     assert skyramp.get_response_value(orders_PUT_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_PUT_response, "Status__c") == "Submitted to Manufacturing"
     assert skyramp.get_response_value(orders_PUT_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_PUT_response, "LastModifiedDate") is not None
 
     # Step 4: Verify status persisted
     orders_GET_1_response = client.send_request(
@@ -90,6 +93,7 @@ def test_integration():
     assert orders_GET_1_response.status_code == 200
     assert skyramp.get_response_value(orders_GET_1_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_GET_1_response, "Status__c") == "Submitted to Manufacturing"
+    assert skyramp.get_response_value(orders_GET_1_response, "LastModifiedDate") is not None
 
     # Step 5: Update status to Approved by Manufacturing
     orders_PUT_1_request_body = r'''{
@@ -108,6 +112,7 @@ def test_integration():
     assert skyramp.get_response_value(orders_PUT_1_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_PUT_1_response, "Status__c") == "Approved by Manufacturing"
     assert skyramp.get_response_value(orders_PUT_1_response, "Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_PUT_1_response, "LastModifiedDate") is not None
 
     # Step 6: Final verification of Approved status
     orders_GET_2_response = client.send_request(
@@ -120,6 +125,7 @@ def test_integration():
     assert orders_GET_2_response.status_code == 200
     assert skyramp.get_response_value(orders_GET_2_response, "Id") == skyramp.get_response_value(endpoint_1_POST_response, "Id")
     assert skyramp.get_response_value(orders_GET_2_response, "Status__c") == "Approved by Manufacturing"
+    assert skyramp.get_response_value(orders_GET_2_response, "LastModifiedDate") is not None
 
     # # Step 7: Delete the order (cleanup)
     # orders_DELETE_response = client.send_request(

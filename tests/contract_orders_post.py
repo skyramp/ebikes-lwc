@@ -42,6 +42,7 @@ def test_orders_post():
         "Account__c": "001g800000C3eLNAAZ",
         "CreatedDate": "2026-04-23T20:00:00.000Z",
         "Id": "a01FAKE000001",
+        "LastModifiedDate": "2026-04-23T20:00:00.000Z",
         "Name": "O-00099",
         "Status__c": "Draft"
     }'''
@@ -63,6 +64,7 @@ def test_orders_post():
     assert skyramp.get_response_value(orders_POST_response, "Account__c") == "001g800000C3eLNAAZ"
     assert skyramp.get_response_value(orders_POST_response, "Status__c") == "Draft"
     assert skyramp.get_response_value(orders_POST_response, "CreatedDate") is not None
+    assert skyramp.get_response_value(orders_POST_response, "LastModifiedDate") is not None
 
     # Cleanup: delete the created order
     order_id = skyramp.get_response_value(orders_POST_response, "Id")
@@ -74,5 +76,46 @@ def test_orders_post():
     )
 
 
+def test_orders_batch_post():
+    client = skyramp.Client()
+    headers = {}
+    if os.getenv("SKYRAMP_TEST_TOKEN") is not None:
+        headers["Authorization"] = "Bearer " + os.getenv("SKYRAMP_TEST_TOKEN")
+
+    orders_batch_POST_request_body = r'''[
+        {"Account__c": "001g800000C3eLNAAZ", "Status__c": "Draft"},
+        {"Account__c": "001g800000C3eLNAAZ", "Status__c": "Draft"}
+    ]'''
+
+    expected_orders_batch_POST_response_body = r'''[
+        {"Id": "a01FAKE000001", "Name": "O-00100", "Status__c": "Draft", "Account__c": "001g800000C3eLNAAZ", "CreatedDate": "2026-04-24T00:00:00.000Z", "LastModifiedDate": "2026-04-24T00:00:00.000Z"},
+        {"Id": "a01FAKE000002", "Name": "O-00101", "Status__c": "Draft", "Account__c": "001g800000C3eLNAAZ", "CreatedDate": "2026-04-24T00:00:00.000Z", "LastModifiedDate": "2026-04-24T00:00:00.000Z"}
+    ]'''
+
+    orders_batch_POST_response = client.send_request(
+        url=URL,
+        path="/services/apexrest/orders/",
+        method="POST",
+        body=orders_batch_POST_request_body,
+        headers=headers
+    )
+
+    assert orders_batch_POST_response.status_code == 201
+    assert skyramp.check_schema(orders_batch_POST_response, expected_orders_batch_POST_response_body)
+    assert skyramp.get_response_value(orders_batch_POST_response, "0.Id") is not None
+    assert skyramp.get_response_value(orders_batch_POST_response, "0.Status__c") == "Draft"
+    assert skyramp.get_response_value(orders_batch_POST_response, "0.Account__c") == "001g800000C3eLNAAZ"
+    assert skyramp.get_response_value(orders_batch_POST_response, "0.LastModifiedDate") is not None
+    assert skyramp.get_response_value(orders_batch_POST_response, "1.Id") is not None
+    assert skyramp.get_response_value(orders_batch_POST_response, "1.Status__c") == "Draft"
+    assert skyramp.get_response_value(orders_batch_POST_response, "2.Id") is None
+
+    order_id_0 = skyramp.get_response_value(orders_batch_POST_response, "0.Id")
+    order_id_1 = skyramp.get_response_value(orders_batch_POST_response, "1.Id")
+    client.send_request(url=URL, path=f"/services/apexrest/orders/{order_id_0}", method="DELETE", headers=headers)
+    client.send_request(url=URL, path=f"/services/apexrest/orders/{order_id_1}", method="DELETE", headers=headers)
+
+
 if __name__ == "__main__":
     test_orders_post()
+    test_orders_batch_post()

@@ -16,4 +16,9 @@ public with sharing class OrderController {
             WITH USER_MODE
         ];
     }
+
+    @AuraEnabled(Cacheable=true scope='global')
+    public static Integer getOrderCount() {
+        return [SELECT count() FROM Order__c];
+    }
 }

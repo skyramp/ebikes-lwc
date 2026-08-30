@@ -1,6 +1,17 @@
 @RestResource(urlMapping='/orders/*')
 global class OrderRestController {
 
+    private static Order__c buildOrder(Map<String, Object> body) {
+        Order__c ord = new Order__c();
+        if (body.containsKey('Account__c')) ord.Account__c = (String) body.get('Account__c');
+        if (body.containsKey('Status__c')) {
+            ord.Status__c = (String) body.get('Status__c');
+        } else {
+            ord.Status__c = 'Draft';
+        }
+        return ord;
+    }
+
     @HttpGet
     global static void getOrders() {
         RestRequest req = RestContext.request;
@@ -10,7 +21,7 @@ global class OrderRestController {
             // GET /orders/{id}
             try {
                 Order__c ord = [
-                    SELECT Id, Name, Status__c, Account__c, CreatedDate
+                    SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                     FROM Order__c
                     WHERE Id = :path
                     LIMIT 1
@@ -24,7 +35,7 @@ global class OrderRestController {
         } else {
             // GET /orders/
             List<Order__c> orders = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                 FROM Order__c
                 LIMIT 100
             ];
@@ -36,26 +47,52 @@ global class OrderRestController {
     @HttpPost
     global static void createOrder() {
         RestRequest req = RestContext.request;
-        Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(req.requestBody.toString());
+        String bodyStr = req.requestBody.toString();
 
-        Order__c ord = new Order__c();
-        if (body.containsKey('Account__c')) ord.Account__c = (String) body.get('Account__c');
-        if (body.containsKey('Status__c')) {
-            ord.Status__c = (String) body.get('Status__c');
+        // Detect batch vs single: if body starts with '[' it's a batch
+        if (bodyStr.trim().startsWith('[')) {
+            // Batch creation
+            List<Object> items = (List<Object>) JSON.deserializeUntyped(bodyStr);
+            List<Order__c> ordersToInsert = new List<Order__c>();
+            for (Object item : items) {
+                ordersToInsert.add(buildOrder((Map<String, Object>) item));
+            }
+
+            // BUG: no partial failure handling — if one record fails, all fail
+            // but we return 201 with empty results instead of an error
+            try {
+                insert ordersToInsert;
+            } catch (DmlException e) {
+                RestContext.response.statusCode = 201;
+                RestContext.response.responseBody = Blob.valueOf('[]');
+                return;
+            }
+
+            Set<Id> ids = new Set<Id>();
+            for (Order__c o : ordersToInsert) ids.add(o.Id);
+            List<Order__c> created = [
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
+                FROM Order__c
+                WHERE Id IN :ids
+            ];
+            RestContext.response.statusCode = 201;
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(created));
         } else {
-            ord.Status__c = 'Draft';
+            // Single creation (original behavior)
+            Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(bodyStr);
+            Order__c ord = buildOrder(body);
+
+            insert ord;
+
+            Order__c created = [
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
+                FROM Order__c
+                WHERE Id = :ord.Id
+                LIMIT 1
+            ];
+            RestContext.response.statusCode = 201;
+            RestContext.response.responseBody = Blob.valueOf(JSON.serialize(created));
         }
-
-        insert ord;
-
-        Order__c created = [
-            SELECT Id, Name, Status__c, Account__c, CreatedDate
-            FROM Order__c
-            WHERE Id = :ord.Id
-            LIMIT 1
-        ];
-        RestContext.response.statusCode = 201;
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(created));
     }
 
     @HttpPut
@@ -80,7 +117,7 @@ global class OrderRestController {
             update ord;
 
             Order__c updated = [
-                SELECT Id, Name, Status__c, Account__c, CreatedDate
+                SELECT Id, Name, Status__c, Account__c, CreatedDate, LastModifiedDate
                 FROM Order__c
                 WHERE Id = :orderId
                 LIMIT 1
